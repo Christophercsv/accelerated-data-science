@@ -512,6 +512,11 @@ class AquaFineTuningApp(AquaApp):
             .with_image(image=container)
             .with_replica(replica)
         )
+        if container == "dsmc://odsc-llm-fine-tuning:2.1.47.43":
+            runtime.with_entrypoint(["scl", "enable", "gcc-toolset-12"]).with_cmd(
+                "python /opt/drivers/driver_pytorch.py accelerate launch -m "
+                "aqua_fine_tune.cli train --deepspeed /opt/configs/zero3_bf16.json"
+            )
 
         return runtime
 
